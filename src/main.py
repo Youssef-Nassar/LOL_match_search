@@ -14,7 +14,7 @@ app = FastAPI()
 BASE_DIR = pathlib.Path(__file__).parent.parent
 app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
 
-RIOT_API_KEY = os.getenv("RIOT_API_KEY", "RGAPI-d66bcae5-c5e1-458b-9ef0-4f178e8215cf")
+RIOT_API_KEY = os.getenv("RIOT_API_KEY", "(your_riot_api_key)")
 REGION = os.getenv("REGION", "europe")
 BASE_URL = f"https://{REGION}.api.riotgames.com/lol/match/v5/matches"
 
