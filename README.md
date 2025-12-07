@@ -41,6 +41,7 @@ The current implementation uses the simple HTML version, which provides all core
 ### AI-Assisted Development
 
 **Important Note**: AI agents were used to speed up certain aspects of project development, but **NOT** in the core project idea or architecture. AI assistance was utilized for:
+- **Frontend structure**: Genrated a simple interface to link it with the backend
 - **Champion Icons Download Script**: Automated script to download all 169 champion icons from Riot's Data Dragon CDN
 - **Folder Path Restructuring**: Automated reorganization of project structure for better maintainability
 - **Testing Endpoints**: Quick testing and validation of API endpoints
