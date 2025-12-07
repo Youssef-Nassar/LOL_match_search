@@ -2,7 +2,7 @@
 
 A web application that fetches and displays post-game statistics for League of Legends matches using the Riot Games API. This project was developed as a technical assessment to demonstrate backend API integration, data parsing, and frontend development skills.
 
-## 📹 Demo Video
+## 📹 Demo Video (Simple HTML)
 
 **Demo Video**: [View Demo](static/vid/simple_html.mkv)
 
@@ -11,8 +11,6 @@ A web application that fetches and displays post-game statistics for League of L
 ### [Full Demo](https://youtu.be/SfgIyZBRqqM)
 
 *Demo video showing the application in action. The video file is located at `static/vid/simple_html.mkv`.*
-
-**Note**: For best viewing experience on GitHub, consider uploading the video to GitHub Releases or using a video hosting service like YouTube and embedding it here.
 
 ## 🎮 Match Reference
 
