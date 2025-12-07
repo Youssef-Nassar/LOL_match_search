@@ -16,7 +16,9 @@ A web application that fetches and displays post-game statistics for League of L
 
 ## 📹 Demo Video (Figma Design)
 
+[![Watch the video](https://img.youtube.com/vi/RobJ5EC0Ihc/maxresdefault.jpg)](https://youtu.be/RobJ5EC0Ihc)
 
+### [figma](https://youtu.be/RobJ5EC0Ihc)
 
 ### Design Ref : https://www.figma.com/files/team/1060033797938790279/resources/community/file/1050752368690341429?fuid=1060033792249859713
 
