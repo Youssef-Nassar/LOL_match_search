@@ -12,6 +12,14 @@ A web application that fetches and displays post-game statistics for League of L
 
 *Demo video showing the application in action. The video file is located at `static/vid/simple_html.mkv`.*
 
+### Design Ref : https://www.figma.com/files/team/1060033797938790279/resources/community/file/1050752368690341429?fuid=1060033792249859713
+
+## 📹 Demo Video (Figma Design)
+
+
+
+### Design Ref : https://www.figma.com/files/team/1060033797938790279/resources/community/file/1050752368690341429?fuid=1060033792249859713
+
 ## 🎮 Match Reference
 
 ![Match Reference](static/pic/Game1.jpeg)
