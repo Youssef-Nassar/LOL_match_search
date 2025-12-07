@@ -6,6 +6,10 @@ A web application that fetches and displays post-game statistics for League of L
 
 **Demo Video**: [View Demo](static/vid/simple_html.mkv)
 
+[![Watch the video](https://img.youtube.com/vi/SfgIyZBRqqM/maxresdefault.jpg)](https://youtu.be/SfgIyZBRqqM)
+
+### [Full Demo](https://youtu.be/SfgIyZBRqqM)
+
 *Demo video showing the application in action. The video file is located at `static/vid/simple_html.mkv`.*
 
 **Note**: For best viewing experience on GitHub, consider uploading the video to GitHub Releases or using a video hosting service like YouTube and embedding it here.
