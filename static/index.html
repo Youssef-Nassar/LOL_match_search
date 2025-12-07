@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>League of Legends Post-Game Data</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Beaufort+Pro:wght@400;500;700&family=Spiegel:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Spiegel', 'Segoe UI', sans-serif;
+            background: #0a0e27;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(13, 26, 45, 0.8) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(13, 26, 45, 0.6) 0%, transparent 50%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #cdbe91;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-family: 'Beaufort Pro', serif;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #c89b3c;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .search-section {
+            background: linear-gradient(135deg, rgba(13, 26, 45, 0.95) 0%, rgba(1, 10, 19, 0.95) 100%);
+            border: 1px solid rgba(200, 155, 60, 0.3);
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid rgba(200, 155, 60, 0.3);
+            border-radius: 4px;
+            font-size: 14px;
+            background: rgba(1, 10, 19, 0.8);
+            color: #cdbe91;
+            font-family: 'Spiegel', sans-serif;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #c89b3c;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: 1px solid #c89b3c;
+            border-radius: 4px;
+            background: linear-gradient(180deg, #c89b3c 0%, #785a28 100%);
+            color: #0a0e27;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: 'Beaufort Pro', serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            background: rgba(102, 102, 102, 0.3);
+            border-color: rgba(102, 102, 102, 0.5);
+            color: rgba(205, 190, 145, 0.5);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .player-select-section {
+            margin-top: 20px;
+        }
+
+        .player-select-section label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #c89b3c;
+            font-family: 'Beaufort Pro', serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 14px;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid rgba(200, 155, 60, 0.3);
+            border-radius: 4px;
+            font-size: 14px;
+            background: rgba(1, 10, 19, 0.8);
+            color: #cdbe91;
+            cursor: pointer;
+            font-family: 'Spiegel', sans-serif;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #c89b3c;
+        }
+
+        .stats-section {
+            background: linear-gradient(135deg, rgba(13, 26, 45, 0.95) 0%, rgba(1, 10, 19, 0.95) 100%);
+            border: 1px solid rgba(200, 155, 60, 0.3);
+            border-radius: 8px;
+            padding: 30px;
+            display: none;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+        }
+
+        .stats-section.active {
+            display: block;
+        }
+
+        .player-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(200, 155, 60, 0.2);
+        }
+
+        .player-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .champion-portrait {
+            width: 80px;
+            height: 80px;
+            border-radius: 4px;
+            border: 2px solid #c89b3c;
+            background: rgba(1, 10, 19, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #cdbe91;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .champion-portrait img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .role-icon {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 28px;
+            height: 28px;
+            background: rgba(1, 10, 19, 0.95);
+            border: 2px solid #c89b3c;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .role-icon svg {
+            width: 20px;
+            height: 20px;
+            fill: #c89b3c;
+        }
+
+        .role-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 12px;
+            background: rgba(1, 10, 19, 0.8);
+            border: 1px solid rgba(200, 155, 60, 0.3);
+            border-radius: 4px;
+            font-size: 12px;
+            color: #cdbe91;
+            font-family: 'Beaufort Pro', serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .role-badge svg {
+            width: 16px;
+            height: 16px;
+            fill: #c89b3c;
+        }
+
+        .champion-name {
+            font-family: 'Beaufort Pro', serif;
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #c89b3c;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .summoner-name {
+            font-size: 1.2em;
+            color: #cdbe91;
+            font-weight: 500;
+        }
+
+        .win-badge {
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 14px;
+            font-family: 'Beaufort Pro', serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border: 1px solid;
+        }
+
+        .win-badge.win {
+            background: linear-gradient(135deg, #0acbe6 0%, #0596aa 100%);
+            color: #0a0e27;
+            border-color: #0acbe6;
+        }
+
+        .win-badge.loss {
+            background: linear-gradient(135deg, #c89b3c 0%, #785a28 100%);
+            color: #0a0e27;
+            border-color: #c89b3c;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: rgba(1, 10, 19, 0.6);
+            border: 1px solid rgba(200, 155, 60, 0.2);
+            border-radius: 4px;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: rgba(205, 190, 145, 0.7);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-family: 'Beaufort Pro', serif;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 2.2em;
+            font-weight: 700;
+            color: #c89b3c;
+            font-family: 'Beaufort Pro', serif;
+        }
+
+        .error-message {
+            background: rgba(139, 0, 0, 0.8);
+            border: 1px solid rgba(220, 53, 69, 0.5);
+            color: #fff;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            display: none;
+            font-family: 'Spiegel', sans-serif;
+        }
+
+        .error-message.active {
+            display: block;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            display: none;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid rgba(200, 155, 60, 0.2);
+            border-top: 3px solid #c89b3c;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>League of Legends Post-Game Data</h1>
+        
+        <div class="search-section">
+            <div class="input-group">
+                <input 
+                    type="text" 
+                    id="matchIdInput" 
+                    placeholder="Enter Match ID (e.g., EUW1_1234567890)"
+                    autocomplete="off"
+                >
+                <button id="fetchBtn" onclick="fetchMatchData()">Search Match</button>
+            </div>
+            
+            <div class="error-message" id="errorMessage"></div>
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p style="margin-top: 10px;">Loading match data...</p>
+            </div>
+            
+            <div class="player-select-section" id="playerSelectSection" style="display: none;">
+                <label for="playerSelect">Select Player:</label>
+                <select id="playerSelect" onchange="displayPlayerStats()">
+                    <option value="">-- Select a player --</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="stats-section" id="statsSection">
+            <div class="player-header">
+                <div class="player-info">
+                    <div class="champion-portrait" id="championPortrait">
+                        <span>Champion</span>
+                    </div>
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div class="champion-name" id="championName"></div>
+                            <div class="role-badge" id="roleBadge"></div>
+                        </div>
+                        <div class="summoner-name" id="summonerName"></div>
+                    </div>
+                </div>
+                <div class="win-badge" id="winBadge"></div>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Kills</div>
+                    <div class="stat-value" id="kills">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Deaths</div>
+                    <div class="stat-value" id="deaths">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Assists</div>
+                    <div class="stat-value" id="assists">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">KDA Ratio</div>
+                    <div class="stat-value" id="kda">0.00</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Gold Earned</div>
+                    <div class="stat-value" id="gold">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">CS (Creep Score)</div>
+                    <div class="stat-value" id="cs">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Damage to Champions</div>
+                    <div class="stat-value" id="damageDealt">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Damage Taken</div>
+                    <div class="stat-value" id="damageTaken">0</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let matchPlayers = [];
+        const els = {
+            matchId: document.getElementById('matchIdInput'),
+            error: document.getElementById('errorMessage'),
+            loading: document.getElementById('loading'),
+            playerSelect: document.getElementById('playerSelect'),
+            playerSection: document.getElementById('playerSelectSection'),
+            statsSection: document.getElementById('statsSection'),
+            fetchBtn: document.getElementById('fetchBtn')
+        };
+
+        els.matchId.addEventListener('keypress', e => e.key === 'Enter' && fetchMatchData());
+
+        async function fetchMatchData() {
+            const matchId = els.matchId.value.trim();
+            els.error.classList.remove('active');
+            els.statsSection.classList.remove('active');
+            els.playerSection.style.display = 'none';
+            els.fetchBtn.disabled = true;
+
+            if (!matchId) {
+                showError('Please enter a match ID');
+                els.fetchBtn.disabled = false;
+                return;
+            }
+
+            els.loading.classList.add('active');
+
+            try {
+                const response = await fetch(`/match/${matchId}/players`);
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.detail || 'Failed to fetch match data');
+                }
+
+                const data = await response.json();
+                matchPlayers = [...data.players].sort((a, b) => 
+                    (a.summonerName || 'zzz').toLowerCase().localeCompare((b.summonerName || 'zzz').toLowerCase())
+                );
+
+                els.playerSelect.innerHTML = '<option value="">-- Select a player --</option>';
+                matchPlayers.forEach((p, i) => {
+                    const opt = document.createElement('option');
+                    opt.value = i;
+                    const roleName = getRoleName(p.role);
+                    opt.textContent = `${p.summonerName} - ${p.championName} (${roleName})`;
+                    els.playerSelect.appendChild(opt);
+                });
+
+                els.playerSection.style.display = 'block';
+                els.loading.classList.remove('active');
+                els.fetchBtn.disabled = false;
+            } catch (error) {
+                els.loading.classList.remove('active');
+                els.fetchBtn.disabled = false;
+                showError(error.message || 'An error occurred');
+            }
+        }
+
+        // Champion ID mapping for special cases
+        const championIdMap = {
+            "Wukong": "MonkeyKing",
+            "Miss Fortune": "MissFortune",
+            "K'Sante": "KSante",
+            "Dr. Mundo": "DrMundo",
+            "Kai'Sa": "Kaisa",
+            "Kog'Maw": "KogMaw",
+            "Rek'Sai": "RekSai",
+            "Vel'Koz": "Velkoz",
+            "Kha'Zix": "Khazix",
+            "Cho'Gath": "Chogath",
+            "Bel'Veth": "Belveth",
+            "LeBlanc": "Leblanc",
+            "Jarvan IV": "JarvanIV",
+            "Nunu & Willump": "Nunu",
+            "Renata Glasc": "Renata",
+            "Twisted Fate": "TwistedFate",
+            "Xin Zhao": "XinZhao",
+            "Tahm Kench": "TahmKench",
+            "Master Yi": "MasterYi"
+        };
+
+        function getChampionId(championName) {
+            // Check mapping first
+            if (championIdMap[championName]) {
+                return championIdMap[championName].toLowerCase();
+            }
+            // Otherwise normalize the name
+            return championName.toLowerCase()
+                .replace(/\s+/g, '')
+                .replace(/'/g, '')
+                .replace(/\./g, '');
+        }
+
+        function getChampionImageUrl(championName) {
+            const champId = getChampionId(championName);
+            return `/static/champions-icons/${champId}.png`;
+        }
+        
+        function getChampionImageUrlWithFallback(championName) {
+            const champId = championName.toLowerCase()
+                .replace(/\s+/g, '')
+                .replace(/'/g, '')
+                .replace(/\./g, '');
+            
+            const localPath = `/static/champions-icons/${champId}.png`;
+            const cdnPath = `https://ddragon.leagueoflegends.com/cdn/14.24.1/img/champion/${champId}.png`;
+            
+            // Create image to test if local exists
+            return new Promise((resolve) => {
+                const testImg = new Image();
+                testImg.onload = () => resolve(localPath);
+                testImg.onerror = () => resolve(cdnPath);
+                testImg.src = localPath;
+            });
+        }
+
+        function getRoleIcon(role) {
+            const roleUpper = (role || '').toUpperCase().trim();
+            // League of Legends style role icons
+            const roleIcons = {
+                'TOP': '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 7v10l10 5 10-5V7L12 2z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 6L6 9v6l6 3 6-3V9l-6-3z" fill="currentColor"/></svg>',
+                'JUNGLE': '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 2a10 10 0 0 1 8.66 5M12 22a10 10 0 0 1-8.66-5M19.07 8.93a10 10 0 0 1 0 6.14M4.93 8.93a10 10 0 0 0 0 6.14" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>',
+                'MIDDLE': '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 7v10l10 5 10-5V7L12 2z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 8L8 10v4l4 2 4-2v-4l-4-2z" fill="currentColor"/><path d="M12 9.5l2 1v3l-2 1-2-1v-3l2-1z" fill="currentColor" opacity="0.8"/></svg>',
+                'MID': '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 7v10l10 5 10-5V7L12 2z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 8L8 10v4l4 2 4-2v-4l-4-2z" fill="currentColor"/><path d="M12 9.5l2 1v3l-2 1-2-1v-3l2-1z" fill="currentColor" opacity="0.8"/></svg>',
+                'BOTTOM': '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 7v10l10 5 10-5V7L12 2z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 6L6 9v6l6 3 6-3V9l-6-3z" fill="currentColor"/><circle cx="12" cy="12" r="2" fill="currentColor" opacity="0.3"/></svg>',
+                'BOT': '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 7v10l10 5 10-5V7L12 2z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 6L6 9v6l6 3 6-3V9l-6-3z" fill="currentColor"/><circle cx="12" cy="12" r="2" fill="currentColor" opacity="0.3"/></svg>',
+                'UTILITY': '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 6v6M6 12h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="2" fill="currentColor"/><path d="M12 18v2M12 4v2M4 12h2M18 12h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+                'SUPPORT': '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 6v6M6 12h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="2" fill="currentColor"/><path d="M12 18v2M12 4v2M4 12h2M18 12h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+                'UNKNOWN': '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'
+            };
+            return roleIcons[roleUpper] || roleIcons['UNKNOWN'];
+        }
+
+        function getRoleName(role) {
+            const roleUpper = (role || '').toUpperCase().trim();
+            const roleNames = {
+                'TOP': 'Top',
+                'JUNGLE': 'Jungle',
+                'MIDDLE': 'Mid',
+                'MID': 'Mid',
+                'BOTTOM': 'ADC',
+                'BOT': 'ADC',
+                'UTILITY': 'Support',
+                'SUPPORT': 'Support',
+                'UNKNOWN': 'Unknown'
+            };
+            return roleNames[roleUpper] || (role ? role : 'Unknown');
+        }
+
+        function displayPlayerStats() {
+            const idx = parseInt(els.playerSelect.value);
+            if (isNaN(idx) || idx < 0 || idx >= matchPlayers.length) {
+                els.statsSection.classList.remove('active');
+                return;
+            }
+
+            const p = matchPlayers[idx];
+            document.getElementById('championName').textContent = p.championName;
+            document.getElementById('summonerName').textContent = p.summonerName;
+            
+            // Update role badge
+            const roleBadge = document.getElementById('roleBadge');
+            const roleName = getRoleName(p.role);
+            roleBadge.innerHTML = getRoleIcon(p.role) + '<span>' + roleName + '</span>';
+            
+            // Update champion portrait
+            const portrait = document.getElementById('championPortrait');
+            const img = document.createElement('img');
+            img.alt = p.championName;
+            
+            // Get correct champion ID (handles special cases)
+            const champId = getChampionId(p.championName);
+            const localPath = `/static/champions-icons/${champId}.png`;
+            const cdnPath = `https://ddragon.leagueoflegends.com/cdn/14.24.1/img/champion/${champId}.png`;
+            
+            // Try local first
+            img.src = localPath;
+            img.onerror = function() {
+                // If local fails, try CDN
+                this.onerror = function() {
+                    // If CDN also fails, show initials
+                    this.style.display = 'none';
+                    portrait.innerHTML = '<span>' + p.championName.substring(0, 3).toUpperCase() + '</span>';
+                };
+                this.src = cdnPath;
+            };
+            
+            portrait.innerHTML = '';
+            portrait.appendChild(img);
+            
+            // Add role icon to portrait
+            const roleIconDiv = document.createElement('div');
+            roleIconDiv.className = 'role-icon';
+            roleIconDiv.innerHTML = getRoleIcon(p.role);
+            portrait.appendChild(roleIconDiv);
+            
+            const winBadge = document.getElementById('winBadge');
+            winBadge.textContent = p.win ? 'VICTORY' : 'DEFEAT';
+            winBadge.className = `win-badge ${p.win ? 'win' : 'loss'}`;
+
+            document.getElementById('kills').textContent = p.kills;
+            document.getElementById('deaths').textContent = p.deaths;
+            document.getElementById('assists').textContent = p.assists;
+            document.getElementById('kda').textContent = p.deaths === 0 
+                ? (p.kills + p.assists).toFixed(2)
+                : ((p.kills + p.assists) / p.deaths).toFixed(2);
+            document.getElementById('gold').textContent = formatNumber(p.gold);
+            document.getElementById('cs').textContent = p.CS;
+            document.getElementById('damageDealt').textContent = formatNumber(p.damageDealtToChampions);
+            document.getElementById('damageTaken').textContent = formatNumber(p.damageTaken);
+
+            els.statsSection.classList.add('active');
+        }
+
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        function showError(message) {
+            els.error.textContent = message;
+            els.error.classList.add('active');
+        }
+    </script>
+</body>
+</html>
